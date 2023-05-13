@@ -4,8 +4,9 @@ import br.com.system.carrental.dtos.UserRequestDTO;
 import br.com.system.carrental.dtos.UserResponseDTO;
 import br.com.system.carrental.models.UserModel;
 import br.com.system.carrental.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +15,15 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public List<UserResponseDTO> listAllUsers() {
         List<UserModel> userList = userRepository.findAll();
@@ -27,6 +34,7 @@ public class UserServiceImpl implements UserService {
         return userResponseDTOList;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<UserResponseDTO> findUserById(Long id) {
         Optional<UserModel> user = userRepository.findById(id);
@@ -41,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         UserModel user = new UserModel(userRequestDTO);
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
         return new UserResponseDTO(user);
@@ -55,7 +63,7 @@ public class UserServiceImpl implements UserService {
             UserModel newUser = user.get();
             newUser.setName(userRequestDTO.getName());
             newUser.setUsername(userRequestDTO.getUsername());
-            newUser.setPassword(userRequestDTO.getPassword());
+            newUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
             userRepository.save(newUser);
 
