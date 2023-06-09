@@ -1,7 +1,8 @@
 package br.com.system.carrental.services;
 
-import br.com.system.carrental.dtos.UserRequestDTO;
-import br.com.system.carrental.dtos.UserResponseDTO;
+import br.com.system.carrental.dtos.userDTO.UserRequestDTO;
+import br.com.system.carrental.dtos.userDTO.UserResponseDTO;
+import br.com.system.carrental.exception.UsernameAlreadyInUseException;
 import br.com.system.carrental.models.UserModel;
 import br.com.system.carrental.repositories.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,7 +48,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) throws Exception {
+
+        boolean usernameCheck = ifUsernameAlreadyUsed(userRequestDTO.getUsername());
+        if(usernameCheck) {
+            throw new UsernameAlreadyInUseException("Este usuário já existe. Tente novamente!");
+        }
+
         UserModel user = new UserModel(userRequestDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -73,12 +80,20 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
-    @Override
-    public void deleteUser(Long id) {
+    public Optional<Boolean> deleteUserById(Long id) {
         Optional<UserModel> user = userRepository.findById(id);
 
         if(user.isPresent()){
             userRepository.deleteById(user.get().getId());
+            return Optional.of(true);
         }
+
+        return Optional.empty();
+    }
+
+    private boolean ifUsernameAlreadyUsed(String username){
+        Optional<UserModel> user = userRepository.findByUsername(username);
+
+        return user.isPresent();
     }
 }

@@ -1,7 +1,8 @@
 package br.com.system.carrental.controllers;
 
-import br.com.system.carrental.dtos.UserRequestDTO;
-import br.com.system.carrental.dtos.UserResponseDTO;
+import br.com.system.carrental.dtos.userDTO.UserRequestDTO;
+import br.com.system.carrental.dtos.userDTO.UserResponseDTO;
+import br.com.system.carrental.exception.UserNotFoundExeption;
 import br.com.system.carrental.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,18 +34,13 @@ public class UserController {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        throw new UserNotFoundExeption("Usuário ID: " + id + " não encontrado");
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO userRequestDTO){
-        try{
-            UserResponseDTO userResponseDTO = userServiceImpl.createUser(userRequestDTO);
-            return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws Exception {
+        UserResponseDTO userResponseDTO = userServiceImpl.createUser(userRequestDTO);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -57,17 +53,20 @@ public class UserController {
             return new ResponseEntity<>(userResponseDTO.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        throw new UserNotFoundExeption("Usuário ID: " + id + " não encontrado");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id){
-        try {
-            userServiceImpl.deleteUser(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Optional<Boolean> isDeleted = userServiceImpl.deleteUserById(id);
+
+        if(isDeleted.isEmpty()){
+            throw new UserNotFoundExeption("Usuário ID: " + id + " não encontrado");
         }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 }
