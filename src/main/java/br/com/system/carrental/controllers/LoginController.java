@@ -1,6 +1,6 @@
 package br.com.system.carrental.controllers;
 
-import br.com.system.carrental.dtos.UserLoginDTO;
+import br.com.system.carrental.dtos.userDTO.UserLoginDTO;
 import br.com.system.carrental.services.LoginServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

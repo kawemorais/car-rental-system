@@ -1,6 +1,6 @@
 package br.com.system.carrental.models;
 
-import br.com.system.carrental.dtos.UserRequestDTO;
+import br.com.system.carrental.dtos.userDTO.UserRequestDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

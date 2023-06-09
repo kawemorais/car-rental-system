@@ -1,4 +1,4 @@
-package br.com.system.carrental.dtos;
+package br.com.system.carrental.dtos.userDTO;
 
 import br.com.system.carrental.models.UserModel;
 import lombok.Data;
