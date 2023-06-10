@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS db_rentalcarsystem;
-
-USE db_rentalcarsystem;
-
 CREATE TABLE IF NOT EXISTS tb_users
 (
     id       BIGINT              NOT NULL AUTO_INCREMENT,
