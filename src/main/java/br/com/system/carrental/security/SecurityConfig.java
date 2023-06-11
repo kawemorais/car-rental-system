@@ -2,7 +2,6 @@ package br.com.system.carrental.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +20,25 @@ public class SecurityConfig {
         this.filterToken = filterToken;
     }
 
+    private static final String[] URLS_WHITELIST = {
+            //-- Swagger UI v2
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/api/swagger-ui.html",
+            "/webjars/**",
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+
+            // other public endpoints of your API may be appended to this array
+            "/api/v1/login"
+    };
+
+
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -31,8 +49,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/api/v1/login")
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers(URLS_WHITELIST)
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(filterToken, UsernamePasswordAuthenticationFilter.class)
