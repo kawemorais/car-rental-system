@@ -1,4 +1,4 @@
-package br.com.system.carrental.dtos.userDTO;
+package br.com.system.carrental.dtos.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package br.com.system.carrental.controllers;
 
-import br.com.system.carrental.dtos.userDTO.UserLoginDTO;
+import br.com.system.carrental.dtos.user.UserLoginDTO;
 import br.com.system.carrental.models.UserModel;
 import br.com.system.carrental.security.TokenService;
 import jakarta.validation.Valid;

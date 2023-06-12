@@ -1,7 +1,7 @@
-package br.com.system.carrental.services;
+package br.com.system.carrental.services.user;
 
-import br.com.system.carrental.dtos.userDTO.UserRequestDTO;
-import br.com.system.carrental.dtos.userDTO.UserResponseDTO;
+import br.com.system.carrental.dtos.user.UserRequestDTO;
+import br.com.system.carrental.dtos.user.UserResponseDTO;
 
 import java.util.List;
 import java.util.Optional;

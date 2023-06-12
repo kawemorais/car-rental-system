@@ -1,4 +1,4 @@
-package br.com.system.carrental.services;
+package br.com.system.carrental.services.login;
 
 import br.com.system.carrental.models.UserModel;
 import br.com.system.carrental.repositories.UserRepository;

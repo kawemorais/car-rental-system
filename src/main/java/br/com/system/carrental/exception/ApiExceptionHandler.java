@@ -1,6 +1,7 @@
 package br.com.system.carrental.exception;
 
-import br.com.system.carrental.dtos.exceptionsDTO.ExceptionDTO;
+import br.com.system.carrental.dtos.exceptions.ExceptionDTO;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,8 +18,8 @@ import java.util.List;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(value= {UserNotFoundExeption.class})
-    public ResponseEntity<Object> userNotFoundExceptionHandler(UserNotFoundExeption error){
+    @ExceptionHandler(value= {EntityNotFoundExeption.class})
+    public ResponseEntity<Object> userNotFoundExceptionHandler(EntityNotFoundExeption error){
 
         HttpStatus notFound = HttpStatus.NOT_FOUND;
 
@@ -50,8 +51,8 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(exceptionDTO, badRequest);
     }
 
-    @ExceptionHandler(value = {UsernameAlreadyInUseException.class})
-    public ResponseEntity<Object> usernameAlreadyInUseExceptionHandler(UsernameAlreadyInUseException error){
+    @ExceptionHandler(value = {SomePropertyAlreadyInUseException.class})
+    public ResponseEntity<Object> usernameAlreadyInUseExceptionHandler(SomePropertyAlreadyInUseException error){
         HttpStatus conflict = HttpStatus.CONFLICT;
 
         ExceptionDTO exceptionDTO = new ExceptionDTO(

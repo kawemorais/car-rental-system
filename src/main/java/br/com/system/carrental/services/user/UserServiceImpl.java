@@ -1,8 +1,8 @@
-package br.com.system.carrental.services;
+package br.com.system.carrental.services.user;
 
-import br.com.system.carrental.dtos.userDTO.UserRequestDTO;
-import br.com.system.carrental.dtos.userDTO.UserResponseDTO;
-import br.com.system.carrental.exception.UsernameAlreadyInUseException;
+import br.com.system.carrental.dtos.user.UserRequestDTO;
+import br.com.system.carrental.dtos.user.UserResponseDTO;
+import br.com.system.carrental.exception.SomePropertyAlreadyInUseException;
 import br.com.system.carrental.models.UserModel;
 import br.com.system.carrental.repositories.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         boolean usernameCheck = ifUsernameAlreadyUsed(userRequestDTO.getUsername());
         if(usernameCheck) {
-            throw new UsernameAlreadyInUseException("Este usuário já existe. Tente novamente!");
+            throw new SomePropertyAlreadyInUseException("Este usuário já existe. Tente novamente!");
         }
 
         UserModel user = new UserModel(userRequestDTO);
