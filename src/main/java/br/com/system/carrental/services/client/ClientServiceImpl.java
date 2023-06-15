@@ -64,8 +64,40 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Optional<ClientDTO> updateClientById(Long id, ClientRequestDTO clientRequestDTO) {
-        return Optional.empty();
-        //TODO : Implements this method. The address will be always updated? Or create an especific service for update only the address.
+
+        Optional<ClientModel> client = clientRepository.findById(id);
+
+        if(client.isEmpty()){
+            throw new EntityNotFoundExeption("O client id " + id + " não foi encontrado");
+        }
+
+        ClientModel newClient = client.get();
+
+        if(!newClient.getCpf().equals(clientRequestDTO.getCpf()) || !newClient.getCnhNumber().equals(clientRequestDTO.getCnhNumber())){
+            if(isCpfNumberAlreadyUsed(clientRequestDTO.getCpf())) {
+                throw new SomePropertyAlreadyInUseException("Este CPF já esta em uso");
+            }
+            if(isCnhNumberAlreadyUsed(clientRequestDTO.getCnhNumber())) {
+                throw new SomePropertyAlreadyInUseException("Esta CNH já esta em uso");
+            }
+        }
+
+        newClient.setName(clientRequestDTO.getName());
+        newClient.setAge(clientRequestDTO.getAge());
+        newClient.setSex(clientRequestDTO.getSex());
+        newClient.setCpf(clientRequestDTO.getCpf());
+
+        if(clientRequestDTO.getCep() != null){
+            AddressModel address = addressService.genarateAddress(clientRequestDTO.getCep(), clientRequestDTO.getHouseNumber(), clientRequestDTO.getAddressComplement());
+            newClient.setAddress(address);
+        }
+
+        newClient.getAddress().setHouseNumber(clientRequestDTO.getHouseNumber());
+        newClient.getAddress().setComplement(clientRequestDTO.getAddressComplement());
+
+        clientRepository.save(newClient);
+
+        return Optional.of(new ClientDTO(newClient));
     }
 
     @Override
