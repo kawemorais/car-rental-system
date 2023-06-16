@@ -18,7 +18,7 @@ public class CarRequestDTO {
     private String carBrand;
 
     @NotNull(message = "O campo ano de fabricação não pode ser vazio")
-    private String fabricationYear;
+    private Integer fabricationYear;
 
     @NotBlank(message = "O campo placa nao pode ser vazio")
     @Size(min = 7, max = 7, message = "Placa invalida")

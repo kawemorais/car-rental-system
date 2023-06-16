@@ -7,6 +7,7 @@ import br.com.system.carrental.exception.SomePropertyAlreadyInUseException;
 import br.com.system.carrental.exception.invalidFabricationYearException;
 import br.com.system.carrental.models.Car;
 import br.com.system.carrental.repositories.CarRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -96,7 +97,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Optional<?> deleteCarById(Long id) {
+    public Optional<Boolean> deleteCarById(Long id) {
         Optional<Car> car = carRepository.findById(id);
 
         if(car.isPresent()){
@@ -112,10 +113,9 @@ public class CarServiceImpl implements CarService {
         return this.carRepository.findByPlateNumber(plateNumber).isPresent();
     }
 
-    private boolean checkFabricationYear(String fabricationYear){
+    private boolean checkFabricationYear(Integer fabricationYear){
         int getYear = LocalDate.now().getYear();
-        int yearFromRequest = Integer.parseInt(fabricationYear);
 
-        return yearFromRequest > getYear;
+        return fabricationYear > getYear;
     }
 }

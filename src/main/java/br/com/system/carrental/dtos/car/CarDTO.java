@@ -18,7 +18,7 @@ public class CarDTO {
 
     private String carBrand;
 
-    private String fabricationYear;
+    private Integer fabricationYear;
 
     private String plateNumber;
 

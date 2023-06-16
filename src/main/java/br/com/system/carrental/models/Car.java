@@ -29,7 +29,7 @@ public class Car implements Serializable {
     private String carBrand;
 
     @Column(name = "fabricationyear", nullable = false)
-    private String fabricationYear;
+    private Integer fabricationYear;
 
     @Column(name = "platenumber", nullable = false, unique = true)
     private String plateNumber;
