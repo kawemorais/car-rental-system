@@ -7,9 +7,10 @@ import br.com.system.carrental.exception.SomePropertyAlreadyInUseException;
 import br.com.system.carrental.exception.invalidFabricationYearException;
 import br.com.system.carrental.models.Car;
 import br.com.system.carrental.repositories.CarRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,11 @@ import java.util.Optional;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
+    private final AmazonS3service amazonService;
 
-    public CarServiceImpl(CarRepository carRepository) {
+    public CarServiceImpl(CarRepository carRepository, AmazonS3service amazonService) {
         this.carRepository = carRepository;
+        this.amazonService = amazonService;
     }
 
 
@@ -109,13 +112,36 @@ public class CarServiceImpl implements CarService {
 
     }
 
+    @Override
+    public Optional<?> setPhotoUrlToCar(Long id, MultipartFile file) throws IOException {
+
+        Optional<Car> car = carRepository.findById(id);
+
+        if(car.isPresent()){
+
+            if(!car.get().getPhotoUrl().equals("")){
+                String nameFileToBeRemoved = car.get().getPhotoUrl().replace("https://car-rental-system-bucket.s3.amazonaws.com/", "");
+                amazonService.deleteImageOnS3Bucket(nameFileToBeRemoved);
+            }
+
+            String publicUrl = amazonService.saveImageOnS3Bucket(file);
+
+            car.get().setPhotoUrl(publicUrl);
+
+            carRepository.save(car.get());
+
+            return Optional.of(car);
+        }
+
+        return Optional.empty();
+    }
+
     private boolean isPlateNumberAlreadyUsed(String plateNumber){
         return this.carRepository.findByPlateNumber(plateNumber).isPresent();
     }
 
     private boolean checkFabricationYear(Integer fabricationYear){
         int getYear = LocalDate.now().getYear();
-
         return fabricationYear > getYear;
     }
 }
