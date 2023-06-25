@@ -15,8 +15,6 @@ public class UserResponseDTO {
 
     private String username;
 
-    private String password;
-
     public UserResponseDTO(UserModel userModel){
         BeanUtils.copyProperties(userModel, this);
     }
