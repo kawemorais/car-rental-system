@@ -3,8 +3,8 @@ package br.com.system.carrental.services.car;
 import br.com.system.carrental.dtos.car.CarDTO;
 import br.com.system.carrental.dtos.car.CarRequestDTO;
 import br.com.system.carrental.exception.EntityNotFoundExeption;
+import br.com.system.carrental.exception.InvalidFabricationYearException;
 import br.com.system.carrental.exception.SomePropertyAlreadyInUseException;
-import br.com.system.carrental.exception.invalidFabricationYearException;
 import br.com.system.carrental.models.Car;
 import br.com.system.carrental.repositories.CarRepository;
 import org.springframework.stereotype.Service;
@@ -60,7 +60,7 @@ public class CarServiceImpl implements CarService {
         }
 
         if(checkFabricationYear(carRequestDTO.getFabricationYear())){
-            throw new invalidFabricationYearException("Ano de fabricação invalido");
+            throw new InvalidFabricationYearException("Ano de fabricação invalido");
         }
 
         Car car = carRepository.save(new Car(carRequestDTO));
@@ -85,7 +85,7 @@ public class CarServiceImpl implements CarService {
         }
 
         if(checkFabricationYear(carRequestDTO.getFabricationYear())){
-            throw new invalidFabricationYearException("Ano de fabricação invalido");
+            throw new InvalidFabricationYearException("Ano de fabricação invalido");
         }
 
         newCar.setCarModel(carRequestDTO.getCarModel());
