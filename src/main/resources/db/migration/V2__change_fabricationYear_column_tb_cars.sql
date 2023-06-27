@@ -1,0 +1,2 @@
+ALTER TABLE tb_cars
+MODIFY COLUMN fabricationYear SMALLINT NOT NULL;
