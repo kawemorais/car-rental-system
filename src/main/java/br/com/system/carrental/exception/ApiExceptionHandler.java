@@ -1,7 +1,6 @@
 package br.com.system.carrental.exception;
 
 import br.com.system.carrental.dtos.exceptions.ExceptionDTO;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -54,6 +53,19 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {SomePropertyAlreadyInUseException.class})
     public ResponseEntity<Object> usernameAlreadyInUseExceptionHandler(SomePropertyAlreadyInUseException error){
         HttpStatus conflict = HttpStatus.CONFLICT;
+
+        ExceptionDTO exceptionDTO = new ExceptionDTO(
+                ZonedDateTime.now(ZoneId.of("-3")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                conflict,
+                error.getMessage()
+        );
+
+        return new ResponseEntity<>(exceptionDTO, conflict);
+    }
+
+    @ExceptionHandler(value = {InvalidFabricationYearException.class})
+    public ResponseEntity<Object> invalidFabricationYearExceptionHandler(InvalidFabricationYearException error){
+        HttpStatus conflict = HttpStatus.NOT_FOUND;
 
         ExceptionDTO exceptionDTO = new ExceptionDTO(
                 ZonedDateTime.now(ZoneId.of("-3")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
